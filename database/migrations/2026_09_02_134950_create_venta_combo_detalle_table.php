@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('venta_combo_detalle', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('venta_id')
+                  ->constrained('ventas')
+                  ->cascadeOnDelete();
+            $table->foreignId('plataforma_id')
+                  ->constrained('plataformas');
+            $table->foreignId('cuenta_id')->nullable()->constrained('cuentas');
+            $table->foreignId('perfil_id')->nullable()->constrained('perfiles');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('venta_combo_detalle');
+    }
+};

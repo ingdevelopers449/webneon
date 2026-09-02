@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('usuarios_sistema', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 150);
-            $table->string('correo', 150)->unique();
-            $table->string('password_hash', 255)->comment('Hash irreversible (RNF-01)');
+            $table->string('name', 150);
+            $table->string('email', 150)->unique();
+            $table->string('password', 255)->comment('Hash irreversible (RNF-01)');
             $table->string('telefono', 20)->nullable();
-            $table->enum('rol', ['administrador', 'cliente']);
+            $table->unsignedBigInteger('id_rol')->comment('Llave foránea a roles');
+            $table->foreign('id_rol')->references('id_rol')->on('roles')->onDelete('restrict');
             $table->enum('estado_cuenta', ['activo', 'desactivado', 'bloqueado', 'suspendido'])
                   ->default('activo');
             $table->boolean('demo_utilizada')->default(false)->comment('RN-01: demo única por usuario');

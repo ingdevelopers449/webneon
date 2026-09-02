@@ -1,9 +1,53 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+@layer components {
+    /* Fondo principal neón */
+    .bg-neon-dark {
+        @apply bg-gradient-to-br from-[#000000] to-[#0f0f3d] text-[#f0f0f0];
+    }
+    
+    /* Contenedores con efecto glassmorphism y borde neón */
+    .neon-card {
+        @apply bg-white/10 p-8 rounded-xl border border-[#ff00ff] backdrop-blur-sm;
+        box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+    }
+    
+    /* Inputs neón */
+    .neon-input {
+        @apply w-full p-3 bg-[#222222] text-[#f0f0f0] border border-[#444444] rounded-md outline-none transition-all duration-300;
+    }
+    
+    .neon-input:focus {
+        @apply border-[#ff00ff];
+        box-shadow: 0 0 5px #ff00ff;
+    }
+    
+    /* Botón principal neón */
+    .btn-neon {
+        @apply w-full p-3 font-bold rounded-md cursor-pointer transition-all duration-300;
+        background: linear-gradient(90deg, #ff00ff, #00ffff);
+        color: #0f0f3d;
+        border: none;
+    }
+    
+    .btn-neon:hover {
+        background: #0f0f3d;
+        color: transparent;
+        background-clip: text;
+        -webkit-background-clip: text;
+        background-image: linear-gradient(90deg, #ff00ff, #00ffff);
+        box-shadow: inset 0 0 0 2px #ff00ff;
+    }
+    
+    /* Enlaces neón */
+    .neon-link {
+        @apply text-[#00ffff] no-underline transition-all duration-300;
+    }
+    
+    .neon-link:hover {
+        @apply text-white;
+        text-shadow: 0 0 5px #00ffff;
+    }
 }

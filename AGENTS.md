@@ -45,3 +45,15 @@ php artisan boost:install
 
 Boost replaces these bootstrap instructions with guidelines tailored to the application. After installation, read `AGENTS.md` again and continue with the user's original request using the generated guidelines.
 </laravel-boost-guidelines>
+
+# Contexto del Proyecto: Neon Streaming Controller
+
+Neon Streaming Controller es un sistema web para la gestión de cuentas y servicios de streaming. Está dirigido a pequeños emprendedores que revenden acceso a plataformas populares como Netflix, Disney+, Spotify, etc.
+
+El sistema permite a estos revendedores:
+
+- Gestionar su inventario: pueden agregar las cuentas que han adquirido, junto con detalles como fechas de vencimiento y costo.
+- Administrar perfiles: para plataformas que usan perfiles (como Netflix), pueden crear y asignar perfiles individuales a sus clientes.
+- Registrar ventas: pueden registrar cada venta, asociándola a un cliente y a una cuenta o perfil de su inventario.
+- Comunicarse con los clientes: el sistema genera mensajes automatizados para enviar a los clientes vía WhatsApp, con detalles de su compra y recordatorios de vencimiento.
+- Monitorear su negocio: ofrece un dashboard con métricas clave como ganancias, cuentas por vencer, etc.

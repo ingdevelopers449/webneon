@@ -75,4 +75,11 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'id_rol', 'id_rol');
     }
+
+    public function subscripcionActiva()
+    {
+        return $this->hasOne(Subscripcion::class, 'usuario_id', 'id')
+                    ->where('fecha_vencimiento', '>=', now())
+                    ->latestOfMany();
+    }
 }

@@ -3,9 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Admin\SuscripcionController;
+
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
-    Route::get('/suscripciones', fn() => view('admin.suscripciones.index'))->name('suscripciones.index');
+    
+    // Rutas de Suscripciones
+    Route::get('/suscripciones', [SuscripcionController::class, 'index'])->name('suscripciones.index');
+    Route::post('/suscripciones/{id}/dias', [SuscripcionController::class, 'gestionarDias'])->name('suscripciones.dias');
     Route::get('/usuarios', fn() => view('admin.usuarios.index'))->name('usuarios.index');
     Route::get('/pagos', fn() => view('admin.pagos.index'))->name('pagos.index');
     Route::get('/demostraciones', fn() => view('admin.demostraciones.index'))->name('demostraciones.index');

@@ -1,0 +1,87 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+use App\Models\User;
+use App\Models\Subscripcion;
+use App\Models\Auditoria;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
+class SuscripcionController extends Controller
+{
+    public function index()
+    {
+        // HU-006: Mostrar un listado de todos los usuarios registrados en el sistema.
+        // Excluimos a los administradores (id_rol = 1) y paginamos.
+        $usuarios = User::with('subscripcionActiva')
+                        ->where('id_rol', '!=', 1)
+                        ->paginate(10);
+
+        $alertasVencimiento = [];
+
+        foreach ($usuarios as $usuario) {
+            if ($usuario->subscripcionActiva) {
+                // Calculamos los días exactos de diferencia respecto a hoy
+                $diasRestantes = now()->diffInDays($usuario->subscripcionActiva->fecha_vencimiento, false);
+                $usuario->subscripcionActiva->dias_restantes_calculados = (int) $diasRestantes;
+                
+                // HU-026: Notificaciones de vencimiento (3 días o menos)
+                if ($diasRestantes <= 3 && $diasRestantes >= 0) {
+                    $alertasVencimiento[] = "Suscripción próxima a vencer: {$usuario->name} (en {$diasRestantes} días).";
+                } elseif ($diasRestantes < 0) {
+                    $alertasVencimiento[] = "Suscripción expirada: {$usuario->name}.";
+                }
+            }
+        }
+
+        return view('admin.suscripciones.index', compact('usuarios', 'alertasVencimiento'));
+    }
+
+    public function gestionarDias(Request $request, $id)
+    {
+        $request->validate([
+            'dias' => 'required|numeric|min:1',
+            'accion' => 'required|in:sumar,restar'
+        ]);
+
+        $dias = (int) $request->dias;
+        $usuario = User::findOrFail($id);
+        $suscripcion = $usuario->subscripcionActiva;
+
+        // Si no tiene suscripción activa, creamos una nueva (iniciando hoy)
+        if (!$suscripcion) {
+            $suscripcion = new Subscripcion();
+            $suscripcion->usuario_id = $usuario->id;
+            $suscripcion->fecha_inicio = now();
+            $suscripcion->fecha_vencimiento = now();
+        }
+
+        $fechaActual = Carbon::parse($suscripcion->fecha_vencimiento);
+        
+        if ($request->accion === 'sumar') {
+            $suscripcion->fecha_vencimiento = $fechaActual->addDays($dias);
+            $mensajeLog = "Se agregaron {$dias} días a la suscripción del usuario {$usuario->email}.";
+        } else {
+            $suscripcion->fecha_vencimiento = $fechaActual->subDays($dias);
+            $mensajeLog = "Se restaron {$dias} días a la suscripción del usuario {$usuario->email}.";
+        }
+
+        $suscripcion->save();
+
+        // HU-006: Trazabilidad de cambios manuales en log_auditoria
+        Auditoria::create([
+            'usuario_id' => Auth::id(), // Admin que hace el cambio
+            'accion' => 'GESTION_DIAS_SUSCRIPCION',
+            'detalle' => $mensajeLog,
+            'direccion_ip' => $request->ip(),
+            'resultado' => 'exitoso',
+            'fecha_hora' => now(), // Como apagué los timestamps necesito enviarlo manual si la DB no lo pone automático, aunque useCurrent() ayuda.
+        ]);
+
+        return back()->with('success', $mensajeLog);
+    }
+}

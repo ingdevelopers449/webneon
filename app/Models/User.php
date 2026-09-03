@@ -82,4 +82,15 @@ class User extends Authenticatable
                     ->where('fecha_vencimiento', '>=', now())
                     ->latestOfMany();
     }
+
+    /**
+     * Relación con Auditoría.
+     * Se agrega esta función (hasMany) para poder acceder rápidamente al historial de 
+     * acciones de un usuario. Por ejemplo: $user->auditorias()->get() 
+     * devolverá todos los registros de lo que este usuario ha hecho en el sistema.
+     */
+    public function auditorias()
+    {
+        return $this->hasMany(Auditoria::class, 'usuario_id', 'id');
+    }
 }

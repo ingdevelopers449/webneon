@@ -10,7 +10,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased bg-gray-100 text-gray-900">
-    <div class="flex min-h-screen">
+    <div class="flex h-screen overflow-hidden">
 
         <!-- 1. SIDEBAR CONDICIONAL POR ROL -->
         @if(Auth::check() && Auth::user()->id_rol === 1)

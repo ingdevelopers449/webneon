@@ -28,6 +28,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // --- INICIO DE TU LÓGICA MANUAL ---
+        // Verificamos si el usuario tiene el rol 1 (Administrador)
+        if ($request->user()->id_rol === 1) {
+            return redirect()->intended(route('admin.dashboard'));
+        }
+        // --- FIN DE TU LÓGICA MANUAL ---
+        // Si no es admin (ej. es un cliente), lo redirigimos al dashboard normal
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

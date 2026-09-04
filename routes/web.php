@@ -24,7 +24,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/demostraciones', [\App\Http\Controllers\Admin\ExcepcionDemoController::class, 'index'])->name('demostraciones.index');
     Route::post('/demostraciones/index', [\App\Http\Controllers\Admin\ExcepcionDemoController::class, 'otorgar'])->name('demostraciones.otorgar');
 
-    Route::get('/exportar', fn() => view('admin.exportar.index'))->name('exportar.index');
+    // Rutas de Exportación
+    Route::get('/exportar', [\App\Http\Controllers\Admin\ExportacionController::class, 'index'])->name('exportar.index');
+    Route::post('/exportar/procesar', [\App\Http\Controllers\Admin\ExportacionController::class, 'procesar'])->name('exportar.procesar');
     // Rutas de Sesiones
     Route::get('/sesiones', [\App\Http\Controllers\Admin\SesionController::class, 'index'])->name('sesiones.index');
     Route::delete('/sesiones/{id}', [\App\Http\Controllers\Admin\SesionController::class, 'destroy'])->name('sesiones.destroy');

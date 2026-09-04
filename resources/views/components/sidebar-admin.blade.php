@@ -44,6 +44,11 @@
                class="px-4 py-2.5 rounded-lg transition-all duration-300 font-bold uppercase tracking-wider text-[11px] {{ request()->routeIs('admin.auditoria.*') ? 'bg-gray-900 text-[#00ffff] border-l-[3px] border-[#00ffff] shadow-[inset_2px_0_10px_rgba(0,255,255,0.1)]' : 'text-gray-400 hover:text-white hover:bg-gray-900 border-l-[3px] border-transparent' }}">
                 Auditoría
             </a>
+
+            <a href="{{ route('admin.exportar.index') }}" 
+               class="px-4 py-2.5 rounded-lg transition-all duration-300 font-bold uppercase tracking-wider text-[11px] {{ request()->routeIs('admin.exportar.*') ? 'bg-gray-900 text-[#00ffff] border-l-[3px] border-[#00ffff] shadow-[inset_2px_0_10px_rgba(0,255,255,0.1)]' : 'text-gray-400 hover:text-white hover:bg-gray-900 border-l-[3px] border-transparent' }}">
+                Exportar Datos
+            </a>
             
             <!-- Enlaces Adicionales (Opción 2) -->
             <div class="mt-4 pt-4 border-t border-gray-800 flex flex-col gap-2">

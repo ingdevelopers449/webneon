@@ -22,8 +22,8 @@ return new class extends Migration
         Schema::create('permiso_rol', function (Blueprint $table) {
             $table->id();
             $table->foreignId('permiso_id')->constrained('permisos')->onDelete('cascade');
-            // La tabla roles existe según migraciones pasadas (create_roles_table)
-            $table->foreignId('rol_id')->constrained('roles')->onDelete('cascade');
+            $table->unsignedBigInteger('rol_id');
+            $table->foreign('rol_id')->references('id_rol')->on('roles')->onDelete('cascade');
             $table->timestamps();
         });
     }

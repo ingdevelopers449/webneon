@@ -27,6 +27,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // Rutas de Exportación
     Route::get('/exportar', [\App\Http\Controllers\Admin\ExportacionController::class, 'index'])->name('exportar.index');
     Route::post('/exportar/procesar', [\App\Http\Controllers\Admin\ExportacionController::class, 'procesar'])->name('exportar.procesar');
+
+    // Rutas de Configuración del Sistema
+    Route::get('/configuracion', [\App\Http\Controllers\Admin\ConfiguracionController::class, 'index'])->name('configuracion.index');
+    Route::post('/configuracion/general', [\App\Http\Controllers\Admin\ConfiguracionController::class, 'guardarGeneral'])->name('configuracion.general');
+    Route::post('/configuracion/plan', [\App\Http\Controllers\Admin\ConfiguracionController::class, 'guardarPlan'])->name('configuracion.plan');
+    Route::post('/configuracion/permisos/{id_rol}', [\App\Http\Controllers\Admin\ConfiguracionController::class, 'actualizarPermisos'])->name('configuracion.permisos');
+
     // Rutas de Sesiones
     Route::get('/sesiones', [\App\Http\Controllers\Admin\SesionController::class, 'index'])->name('sesiones.index');
     Route::delete('/sesiones/{id}', [\App\Http\Controllers\Admin\SesionController::class, 'destroy'])->name('sesiones.destroy');
@@ -34,6 +41,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // Rutas de Auditoria
     Route::get('/auditoria', [\App\Http\Controllers\Admin\AuditoriaController::class, 'index'])->name('auditoria.index');
     Route::get('/auditoria/exportar', [\App\Http\Controllers\Admin\AuditoriaController::class, 'exportar'])->name('auditoria.exportar');
+
+    // Rutas de Soporte
+    Route::get('/soporte', [\App\Http\Controllers\Admin\SoporteController::class, 'index'])->name('soporte.index');
+    Route::post('/soporte/tickets', [\App\Http\Controllers\Admin\SoporteController::class, 'crearTicket'])->name('soporte.tickets.crear');
+    Route::put('/soporte/tickets/{id}/estado', [\App\Http\Controllers\Admin\SoporteController::class, 'cambiarEstado'])->name('soporte.tickets.estado');
+    Route::post('/soporte/tickets/{id}/responder', [\App\Http\Controllers\Admin\SoporteController::class, 'responderTicket'])->name('soporte.tickets.responder');
+    Route::post('/soporte/notificaciones/{id}/leida', [\App\Http\Controllers\Admin\SoporteController::class, 'marcarLeida'])->name('soporte.notificaciones.leida');
+    Route::post('/soporte/notificaciones/leer-todas', [\App\Http\Controllers\Admin\SoporteController::class, 'marcarTodasLeidas'])->name('soporte.notificaciones.leer-todas');
 });
 
 Route::get('/', function () {

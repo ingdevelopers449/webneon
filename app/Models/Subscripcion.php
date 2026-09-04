@@ -17,7 +17,10 @@ class Subscripcion extends Model
 
     // 3. Atributos asignables masivamente
     protected $fillable = [
-        'usuario_id', // Esta es la llave foránea correcta
+        'usuario_id',
+        'plan_id',
+        'precio',
+        'tipo_suscripcion',
         'fecha_inicio',
         'fecha_vencimiento',
         'dias_restantes',
@@ -28,17 +31,31 @@ class Subscripcion extends Model
         return [
             'fecha_inicio'      => 'datetime',
             'fecha_vencimiento' => 'datetime',
-            // 'precio' fue removido porque no existe en la migración
+            'precio'            => 'decimal:2',
         ];
     }
 
     public function usuario(): BelongsTo
     {
-        // Parámetros: Modelo destino, llave foránea local, llave primaria destino
         return $this->belongsTo(
-            User::class, 
-            'usuario_id', 
+            User::class,
+            'usuario_id',
             'id'
         );
+    }
+
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(PlanSuscripcion::class, 'plan_id');
+    }
+
+    public function comprobantes()
+    {
+        return $this->hasMany(Comprobantes::class, 'suscripcion_id');
+    }
+
+    public function ultimoComprobante()
+    {
+        return $this->hasOne(Comprobantes::class, 'suscripcion_id')->latestOfMany('fecha_carga');
     }
 }

@@ -13,16 +13,15 @@ return new class extends Migration
     {
         Schema::create('comprobantes_pago', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('usuario_id')
-                  ->comment('Cliente del sistema al que se extiende')
+            $table->foreignId('suscripcion_id')
+                  ->constrained('suscripciones')
+                  ->cascadeOnDelete();
+            $table->string('nombre_archivo', 255);
+            $table->string('ruta_archivo', 500);
+            $table->timestamp('fecha_carga')->useCurrent();
+            $table->foreignId('administrador_id')
                   ->constrained('usuarios_sistema')
                   ->cascadeOnDelete();
-            $table->foreignId('registrado_por_admin_id')
-                  ->constrained('usuarios_sistema');
-            $table->string('archivo_ruta', 500);
-            $table->integer('dias_asignados');
-            $table->string('nota', 255)->nullable();
-            $table->timestamp('fecha_carga')->useCurrent();
         });
     }
 

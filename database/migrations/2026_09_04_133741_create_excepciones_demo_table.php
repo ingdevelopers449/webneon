@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('excepciones_demo', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('usuario_id');
+            $table->integer('dias_asignados');
+            $table->string('justificacion', 255);
+            $table->timestamp('fecha_asignacion');
+            $table->timestamps();
+
+            $table->foreign('usuario_id')->references('id')->on('usuarios_sistema');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('excepciones_demo');
+    }
+};

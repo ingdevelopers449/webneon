@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Subscripcion;
 use App\Models\Auditoria;
+use App\Models\Comprobantes;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,7 +46,8 @@ class SuscripcionController extends Controller
     {
         $request->validate([
             'dias' => 'required|numeric|min:1',
-            'accion' => 'required|in:sumar,restar'
+            'accion' => 'required|in:sumar,restar',
+            'comprobante' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048'
         ]);
 
         $dias = (int) $request->dias;
@@ -72,6 +74,23 @@ class SuscripcionController extends Controller
 
         $suscripcion->save();
 
+        // HU-009: Guardar Comprobante si fue subido
+        if ($request->hasFile('comprobante')) {
+            $archivo = $request->file('comprobante');
+            $nombreArchivo = $archivo->getClientOriginalName();
+            $rutaArchivo = $archivo->store('comprobantes', 'public');
+
+            Comprobantes::create([
+                'suscripcion_id' => $suscripcion->id,
+                'nombre_archivo' => $nombreArchivo,
+                'ruta_archivo' => $rutaArchivo,
+                'fecha_carga' => now(),
+                'administrador_id' => Auth::id()
+            ]);
+            
+            $mensajeLog .= " (Con comprobante adjunto)";
+        }
+
         // HU-006: Trazabilidad de cambios manuales en log_auditoria
         Auditoria::create([
             'usuario_id' => Auth::id(), // Admin que hace el cambio
@@ -79,7 +98,7 @@ class SuscripcionController extends Controller
             'detalle' => $mensajeLog,
             'direccion_ip' => $request->ip(),
             'resultado' => 'exitoso',
-            'fecha_hora' => now(), // Como apagué los timestamps necesito enviarlo manual si la DB no lo pone automático, aunque useCurrent() ayuda.
+            'fecha_hora' => now(),
         ]);
 
         return back()->with('success', $mensajeLog);

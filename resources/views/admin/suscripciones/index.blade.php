@@ -69,7 +69,20 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center whitespace-nowrap">
-                                {{ $usuario->subscripcionActiva ? $usuario->subscripcionActiva->fecha_inicio->format('d M Y') : '---' }}
+                                @if($usuario->subscripcionActiva)
+                                    <div>{{ $usuario->subscripcionActiva->fecha_inicio->format('d M Y') }}</div>
+                                    @if($usuario->tipo_periodo_actual === 'demo')
+                                        <span class="inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700 border border-purple-300">
+                                            DEMO MANUAL
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-700 border border-indigo-300">
+                                            SUSCRIPCIÓN
+                                        </span>
+                                    @endif
+                                @else
+                                    ---
+                                @endif
                             </td>
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if($usuario->subscripcionActiva)
@@ -93,7 +106,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <button onclick="abrirModal({{ $usuario->id }}, '{{ addslashes($usuario->name) }}')" class="inline-flex items-center px-3 py-1.5 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-sm">
+                                <button onclick="abrirModal({{ $usuario->id }}, '{{ addslashes($usuario->name) }}')" class="btn-neon-primary shadow-sm">
                                     Gestionar
                                 </button>
                             </td>
@@ -125,18 +138,24 @@
             <h3 class="text-lg font-bold text-gray-900 mb-1">Gestionar Días de Suscripción</h3>
             <p class="text-sm text-gray-500 mb-6">Usuario: <span id="modal-user-name" class="font-semibold text-indigo-600"></span></p>
 
-            <form id="form-gestion" method="POST" action="">
+            <form id="form-gestion" method="POST" action="" enctype="multipart/form-data">
                 @csrf
-                <div class="mb-6">
+                <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Cantidad de Días (Num. Positivo)</label>
-                    <input type="number" name="dias" min="1" required class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <input type="number" name="dias" min="1" required class="w-full border-gray-300 rounded-md shadow-sm focus:border-[#00ffff] focus:ring-[#00ffff] sm:text-sm">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Comprobante de Pago (Opcional)</label>
+                    <input type="file" name="comprobante" accept=".jpg,.jpeg,.png,.pdf" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-bold file:bg-[#00ffff] file:text-black hover:file:bg-[#00cccc] cursor-pointer">
+                    <p class="mt-1 text-xs text-gray-500">Solo JPG, PNG o PDF. Max 2MB.</p>
                 </div>
 
                 <div class="flex gap-3">
-                    <button type="submit" name="accion" value="restar" class="flex-1 inline-flex justify-center items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                    <button type="submit" name="accion" value="restar" class="btn-neon-secondary w-full shadow-sm">
                         - Restar
                     </button>
-                    <button type="submit" name="accion" value="sumar" class="flex-1 inline-flex justify-center items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-sm">
+                    <button type="submit" name="accion" value="sumar" class="btn-neon-primary w-full shadow-sm">
                         + Sumar
                     </button>
                 </div>

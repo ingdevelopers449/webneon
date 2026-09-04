@@ -25,6 +25,7 @@ use Illuminate\Notifications\Notifiable;
     'fecha_solicitud_cancelacion',
     'suspension_inmediata',
     'moneda',
+    'fecha_registro',
 ])]
 #[Hidden([
     'password',
